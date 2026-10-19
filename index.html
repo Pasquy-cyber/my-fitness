@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111827">
+    <title>My Fitness</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main class="app">
+
+        <!-- SCHERMATA INIZIALE -->
+        <section id="homeScreen" class="screen">
+            <header class="app-header">
+                <p class="eyebrow">IL TUO PERCORSO</p>
+                <h1>MY FITNESS</h1>
+                <p>Allenati, registra i progressi, migliora.</p>
+            </header>
+
+            <div class="panel">
+                <h2>Il mio allenamento</h2>
+
+                <label for="workoutSelect">Scegli la scheda</label>
+                <select id="workoutSelect">
+                    <option value="lunedi">Lunedì - Petto, spalle, tricipiti</option>
+                    <option value="mercoledi">Mercoledì - Schiena, bicipiti, addome</option>
+                    <option value="venerdi">Venerdì - Gambe, esplosività, addome</option>
+                </select>
+
+                <p id="repsRange" class="muted"></p>
+
+                <button id="startButton" class="primary-button">
+                    INIZIA ALLENAMENTO
+                </button>
+                <button id="bodyMeasurementsButton" class="secondary-button" type="button">
+                    PESO E GIROVITA
+                </button>
+                <button id="tabataButton" class="secondary-button" type="button">
+                    TIMER TABATA
+                </button>
+            </div>
+
+            <section id="historySection" class="panel">
+                <h2>Storico allenamenti</h2>
+                <p id="historyEmpty" class="muted">
+                    Non hai ancora allenamenti registrati.
+                </p>
+
+                <div id="historyList"></div>
+
+                <button id="clearHistoryButton" class="secondary-button" type="button">
+                    CANCELLA STORICO
+                </button>
+            </section>
+        </section>
+
+        <!-- SCHERMATA ALLENAMENTO -->
+        <section id="workoutScreen" class="screen" style="display: none;">
+            <div class="top-line">
+                <span class="eyebrow">ALLENAMENTO IN CORSO</span>
+                <span id="exerciseProgress" class="progress-label"></span>
+            </div>
+
+            <div class="panel exercise-card">
+                <h2 id="exerciseName">Esercizio</h2>
+
+                <p class="muted">Serie completata / serie totali</p>
+                <strong id="setNumber" class="set-number">1 / 3</strong>
+
+                <label for="repsInput">Ripetizioni per questa serie</label>
+                <input type="number" id="repsInput" value="8" min="1" step="1">
+
+                <label for="weightInput">Peso in kg (lascia vuoto se a corpo libero)</label>
+                <input type="number" id="weightInput" value="30" min="0" step="0.5">
+
+                <button id="saveExerciseButton" class="secondary-button" type="button">
+                    SALVA MODIFICHE
+                </button>
+
+                <p id="saveMessage" class="status-message" aria-live="polite"></p>
+            </div>
+
+            <button id="completeButton" class="primary-button" type="button">
+                SERIE COMPLETATA
+            </button>
+
+            <button id="cancelWorkoutButton" class="text-button" type="button">
+                TERMINA E TORNA ALL'INIZIO
+            </button>
+        </section>
+
+        <!-- SCHERMATA RECUPERO -->
+        <section id="restScreen" class="screen" style="display: none;">
+            <div class="panel rest-card">
+                <p class="eyebrow">RECUPERO</p>
+                <h2 id="restHeading">RECUPERO</h2>
+
+                <p id="nextExerciseText" class="muted"></p>
+
+                <div id="timer" class="timer">60</div>
+                <p>secondi</p>
+
+                <button id="pauseButton" class="primary-button" type="button">
+                    PAUSA
+                </button>
+
+                <button id="resetButton" class="secondary-button" type="button">
+                    SALTA RECUPERO
+                </button>
+            </div>
+        </section>
+
+        <!-- SCHERMATA RIEPILOGO -->
+        <section id="summaryScreen" class="screen" style="display: none;">
+            <div class="panel">
+                <p class="eyebrow">SESSIONE TERMINATA</p>
+                <h2>Allenamento completato!</h2>
+                <p>Ottimo lavoro 💪</p>
+
+                <h3 id="summaryWorkoutTitle"></h3>
+
+                <div id="summaryStats" class="summary-stats"></div>
+
+                <h3>Dettaglio delle serie</h3>
+                <div id="summaryContent"></div>
+
+                <button id="summaryHomeButton" class="primary-button" type="button">
+                    TORNA ALL'INIZIO
+                </button>
+            </div>
+        </section>
+        <!-- SCHERMATA PESO E GIROVITA -->
+        <section id="measurementsScreen" class="screen" style="display: none;">
+            <div class="top-line">
+                <span class="eyebrow">IL TUO PROGRESSO</span>
+            </div>
+
+            <div class="panel">
+                <h2>Peso e girovita</h2>
+                <p class="muted">
+                    Registra le misurazioni e controlla come cambiano nel tempo.
+                </p>
+
+                <label for="measurementDate">Data della misurazione</label>
+                <input type="date" id="measurementDate" required>
+
+                <label for="measurementWeight">Peso (kg)</label>
+                <input
+                    type="number"
+                    id="measurementWeight"
+                    min="0"
+                    step="0.05"
+                    placeholder="Es. 77.3"
+                    required
+                >
+
+                <label for="measurementWaist">Girovita (cm)</label>
+                <input
+                    type="number"
+                    id="measurementWaist"
+                    min="0"
+                    step="0.1"
+                    placeholder="Es. 95"
+                    required
+                >
+
+                <button id="saveMeasurementButton" class="primary-button" type="button">
+                    SALVA MISURAZIONE
+                </button>
+
+                <button id="cancelMeasurementEditButton" class="secondary-button"
+                    type="button" style="display: none;">
+                    ANNULLA MODIFICA
+                </button>
+
+                <p id="measurementMessage" class="status-message" aria-live="polite"></p>
+            </div>
+
+            <div class="panel">
+                <h2>Andamento nel tempo</h2>
+
+                <label for="measurementPeriod">Periodo dei grafici</label>
+                <select id="measurementPeriod">
+                    <option value="30">Ultimi 30 giorni</option>
+                    <option value="90">Ultimi 90 giorni</option>
+                    <option value="all">Tutto lo storico</option>
+                </select>
+
+                <h3>Peso (kg)</h3>
+                <div id="weightChartContainer" class="chart-container">
+                    <p class="muted">Il grafico apparirà dopo il collegamento dei dati.</p>
+                </div>
+
+                <h3>Girovita (cm)</h3>
+                <div id="waistChartContainer" class="chart-container">
+                    <p class="muted">Il grafico apparirà dopo il collegamento dei dati.</p>
+                </div>
+
+                <div id="measurementStats"></div>
+            </div>
+
+            <div class="panel">
+                <h2>Storico misurazioni</h2>
+
+                <p id="measurementHistoryEmpty" class="muted">
+                    Non hai ancora misurazioni registrate.
+                </p>
+
+                <div id="measurementHistoryList"></div>
+            </div>
+
+            <button id="measurementsHomeButton" class="secondary-button" type="button">
+                TORNA ALL'INIZIO
+            </button>
+        </section>
+        <section id="tabataScreen" class="screen" style="display: none;">
+
+    <div id="tabataSetupPanel" class="panel">
+        <h2>Timer Tabata e HIIT</h2>
+        <p>Scegli un allenamento o crea il tuo circuito personalizzato.</p>
+
+        <label for="tabataModeSelect">Modalità</label>
+        <select id="tabataModeSelect">
+            <option value="classic">Tabata classico</option>
+            <option value="hiit">HIIT personalizzato</option>
+            <option value="circuit">Circuito personalizzato</option>
+        </select>
+
+        <label for="tabataProtocolSelect">Protocollo salvato</label>
+        <select id="tabataProtocolSelect">
+            <option value="">Nuovo allenamento</option>
+        </select>
+
+        <label for="tabataProtocolName">Nome allenamento</label>
+        <input id="tabataProtocolName" type="text"
+               placeholder="Es. Circuito esplosività">
+
+        <div id="tabataIntervalSettings">
+            <label for="tabataWorkSeconds">Durata lavoro (secondi)</label>
+            <input id="tabataWorkSeconds" type="number" min="1" value="20">
+
+            <label for="tabataRestSeconds">Recupero (secondi)</label>
+            <input id="tabataRestSeconds" type="number" min="0" value="10">
+
+            <label for="tabataRounds">Round per blocco</label>
+            <input id="tabataRounds" type="number" min="1" value="8">
+
+            <label for="tabataBlocks">Numero blocchi</label>
+            <input id="tabataBlocks" type="number" min="1" value="1">
+
+            <label for="tabataBlockRestSeconds">
+                Recupero tra i blocchi (secondi)
+            </label>
+            <input id="tabataBlockRestSeconds" type="number" min="0" value="60">
+        </div>
+
+        <div id="tabataCircuitEditor" style="display: none;">
+            <h3>Costruisci il circuito</h3>
+
+            <label for="tabataExerciseName">Nome esercizio</label>
+            <input id="tabataExerciseName" type="text"
+                   placeholder="Es. Squat jump">
+
+            <label for="tabataExerciseType">Tipo di esercizio</label>
+            <select id="tabataExerciseType">
+                <option value="time">A tempo</option>
+                <option value="reps">A ripetizioni</option>
+            </select>
+
+            <div id="tabataExerciseTimeField">
+                <label for="tabataExerciseSeconds">Durata (secondi)</label>
+                <input id="tabataExerciseSeconds" type="number"
+                       min="1" value="30">
+            </div>
+
+            <div id="tabataExerciseRepsField" style="display: none;">
+                <label for="tabataExerciseReps">Ripetizioni obiettivo</label>
+                <input id="tabataExerciseReps" type="number"
+                       min="1" value="10">
+            </div>
+
+            <label for="tabataExerciseRestSeconds">
+                Recupero dopo l'esercizio (secondi)
+            </label>
+            <input id="tabataExerciseRestSeconds" type="number"
+                   min="0" value="15">
+
+            <button id="tabataAddExerciseButton" type="button">
+                AGGIUNGI ESERCIZIO
+            </button>
+
+            <div id="tabataExerciseList"></div>
+        </div>
+
+        <div class="panel">
+            <h3>Audio e schermo</h3>
+
+            <label>
+                <input id="tabataSoundEnabled" type="checkbox" checked>
+                Segnali sonori
+            </label>
+
+            <label>
+                <input id="tabataVoiceEnabled" type="checkbox" checked>
+                Annunci vocali in italiano
+            </label>
+
+            <label>
+                <input id="tabataFinalBeepsEnabled" type="checkbox" checked>
+                Segnali negli ultimi 3 secondi
+            </label>
+
+            <p id="tabataWakeStatus">
+                Il mantenimento dello schermo acceso sarà verificato all'avvio.
+            </p>
+        </div>
+
+        <button id="tabataStartButton" class="primary-button" type="button">
+            INIZIA TIMER
+        </button>
+
+        <button id="tabataSaveProtocolButton" type="button">
+            SALVA PROTOCOLLO
+        </button>
+
+        <button id="tabataNewProtocolButton" type="button">
+            NUOVO PROTOCOLLO
+        </button>
+
+        <button id="tabataDuplicateProtocolButton" type="button">
+            DUPLICA PROTOCOLLO
+        </button>
+
+        <button id="tabataDeleteProtocolButton" type="button">
+            ELIMINA PROTOCOLLO
+        </button>
+
+        <h3>Protocolli salvati</h3>
+        <div id="tabataProtocolsList"></div>
+    </div>
+
+    <div id="tabataActivePanel" class="panel" style="display: none;">
+        <h2 id="tabataPhase">PREPARATI</h2>
+
+        <div id="tabataCountdown">5</div>
+
+        <h3 id="tabataCurrentExercise">Pronto per iniziare</h3>
+
+        <div id="tabataTimerDisplay">00:00</div>
+
+        <p id="tabataProgress">Round 0/0 · Blocco 0/0</p>
+
+        <button id="tabataPauseButton" type="button">PAUSA</button>
+        <button id="tabataSkipButton" type="button">SALTA</button>
+
+        <button id="tabataExerciseDoneButton" type="button"
+                style="display: none;">
+            ESERCIZIO COMPLETATO
+        </button>
+
+        <button id="tabataFinishButton" type="button">
+            TERMINA ALLENAMENTO
+        </button>
+    </div>
+
+    <div id="tabataSummaryPanel" class="panel" style="display: none;">
+        <h2>Allenamento terminato</h2>
+        <div id="tabataSummaryContent"></div>
+
+        <button id="tabataSummaryHomeButton" type="button">
+            TORNA AL TIMER
+        </button>
+    </div>
+
+    <div id="tabataHistoryPanel" class="panel">
+        <h3>Storico sessioni Tabata</h3>
+
+        <p id="tabataHistoryEmpty">Nessuna sessione registrata.</p>
+        <div id="tabataHistoryList"></div>
+
+        <button id="tabataClearHistoryButton" type="button">
+            CANCELLA STORICO TABATA
+        </button>
+    </div>
+
+    <button id="tabataReturnButton" class="secondary-button" type="button">
+        TORNA ALLA HOME
+    </button>
+
+</section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

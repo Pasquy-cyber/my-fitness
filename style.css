@@ -1,0 +1,649 @@
+/* =========================
+   IMPOSTAZIONI GENERALI
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f3f4f6;
+    background: #0b1120;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0b1120;
+    padding: 20px 14px;
+}
+
+.app {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.screen {
+    width: 100%;
+}
+
+.app-header {
+    text-align: center;
+    padding: 24px 8px;
+}
+
+.app-header h1 {
+    font-size: clamp(2rem, 8vw, 3rem);
+    letter-spacing: 3px;
+    margin: 8px 0;
+    color: #60a5fa;
+}
+
+.app-header p:not(.eyebrow) {
+    color: #9ca3af;
+    line-height: 1.5;
+}
+
+.eyebrow {
+    color: #60a5fa;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-size: 1.45rem;
+    margin-top: 0;
+}
+
+h3 {
+    font-size: 1.05rem;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.muted {
+    color: #9ca3af;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   PANNELLI
+========================= */
+
+.panel {
+    background: #172033;
+    border: 1px solid #29364d;
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.16);
+}
+
+.panel h2:first-child {
+    margin-top: 0;
+}
+
+/* =========================
+   CAMPI E SELEZIONI
+========================= */
+
+label {
+    display: block;
+    margin: 18px 0 8px;
+    color: #d1d5db;
+    font-size: 0.92rem;
+    font-weight: bold;
+}
+
+select,
+input {
+    display: block;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px;
+    border: 1px solid #46546b;
+    border-radius: 10px;
+    background: #0f172a;
+    color: #f9fafb;
+    font: inherit;
+}
+
+select:focus,
+input:focus {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+input:disabled {
+    opacity: 0.65;
+}
+
+/* =========================
+   PULSANTI
+========================= */
+
+button {
+    width: 100%;
+    min-height: 48px;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.primary-button {
+    margin-top: 20px;
+    color: #071426;
+    background: #60a5fa;
+}
+
+.primary-button:hover:not(:disabled) {
+    background: #93c5fd;
+}
+
+.secondary-button {
+    margin-top: 14px;
+    color: #e5e7eb;
+    background: #334155;
+    border: 1px solid #475569;
+}
+
+.secondary-button:hover:not(:disabled) {
+    background: #475569;
+}
+
+.text-button {
+    margin-top: 12px;
+    color: #fca5a5;
+    background: transparent;
+    border: 1px solid #7f303b;
+}
+
+/* =========================
+   SCHERMATA ALLENAMENTO
+========================= */
+
+.top-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 12px 2px 18px;
+}
+
+.progress-label {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.exercise-card h2 {
+    font-size: 1.6rem;
+    line-height: 1.3;
+}
+
+.set-number {
+    display: block;
+    margin: 10px 0 20px;
+    color: #60a5fa;
+    font-size: 2rem;
+}
+
+.status-message {
+    min-height: 20px;
+    color: #86efac;
+    font-size: 0.85rem;
+}
+
+/* =========================
+   RECUPERO E CRONOMETRO
+========================= */
+
+.rest-card {
+    text-align: center;
+    margin-top: 30px;
+    padding: 28px 22px;
+}
+
+.rest-card h2 {
+    margin-bottom: 8px;
+}
+
+.timer {
+    margin: 20px 0 0;
+    color: #60a5fa;
+    font-size: clamp(4rem, 20vw, 6rem);
+    font-weight: bold;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+#nextExerciseText {
+    min-height: 24px;
+}
+
+/* =========================
+   RIEPILOGO
+========================= */
+
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 20px 0 26px;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 14px 8px;
+    text-align: center;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+}
+
+.stat-card strong {
+    color: #60a5fa;
+    font-size: 1.6rem;
+}
+
+.stat-card span {
+    color: #cbd5e1;
+    font-size: 0.75rem;
+    line-height: 1.3;
+}
+
+.summary-line {
+    padding: 13px 0;
+    border-bottom: 1px solid #334155;
+}
+
+.summary-line:last-child {
+    border-bottom: none;
+}
+
+.summary-line strong {
+    display: block;
+    color: #f3f4f6;
+}
+
+.summary-line p {
+    margin: 5px 0 0;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   STORICO
+========================= */
+
+#historySection {
+    margin-top: 24px;
+}
+
+.history-card {
+    margin-top: 14px;
+    padding: 16px;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    background: #0f172a;
+    overflow-wrap: anywhere;
+}
+
+.history-card h3 {
+    margin: 0 0 8px;
+    color: #f3f4f6;
+}
+
+.history-card p {
+    font-size: 0.88rem;
+}
+
+.history-card .secondary-button {
+    font-size: 0.8rem;
+}
+
+.history-details {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #334155;
+}
+
+.history-details p {
+    margin: 8px 0;
+    color: #cbd5e1;
+}
+
+/* =========================
+   SCHERMI PICCOLI
+========================= */
+
+@media (max-width: 380px) {
+    body {
+        padding: 12px 9px;
+    }
+
+    .panel {
+        padding: 17px;
+    }
+
+    .summary-stats {
+        gap: 6px;
+    }
+
+    .stat-card {
+        padding: 12px 5px;
+    }
+
+    .stat-card strong {
+        font-size: 1.35rem;
+    }
+
+    .stat-card span {
+        font-size: 0.68rem;
+    }
+
+    .top-line {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .progress-label {
+        text-align: left;
+    }
+}
+/* =========================
+   PESO E GIROVITA
+========================= */
+
+#measurementsScreen h2 {
+    line-height: 1.3;
+}
+
+#measurementsScreen .chart-container {
+    width: 100%;
+    min-height: 100px;
+    margin: 12px 0 24px;
+    padding: 12px;
+    overflow: hidden;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+}
+
+#measurementsScreen .chart-container p {
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.measurement-stat-card {
+    margin-top: 12px;
+    padding: 14px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+}
+
+.measurement-stat-card h3 {
+    margin-top: 0;
+    color: #60a5fa;
+}
+
+.measurement-stat-card p {
+    margin: 8px 0;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.measurement-history-card {
+    margin-top: 14px;
+    padding: 16px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    overflow-wrap: anywhere;
+}
+
+.measurement-history-card h3 {
+    margin: 0 0 10px;
+    color: #60a5fa;
+}
+
+.measurement-history-card p {
+    margin: 7px 0;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.measurement-history-card .secondary-button {
+    margin-top: 10px;
+}
+
+.measurement-history-card .text-button {
+    margin-top: 10px;
+}
+
+.measurement-change-positive {
+    color: #fca5a5 !important;
+}
+
+.measurement-change-negative {
+    color: #86efac !important;
+}
+
+.measurement-chart {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.measurement-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+/* ===== TIMER TABATA - MY FITNESS ===== */
+
+#tabataScreen {
+    padding-bottom: 24px;
+}
+
+#tabataScreen .panel {
+    margin-bottom: 18px;
+}
+
+#tabataScreen h2,
+#tabataScreen h3 {
+    margin-bottom: 14px;
+}
+
+#tabataScreen label {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 6px;
+}
+
+#tabataScreen input:not([type="checkbox"]),
+#tabataScreen select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+#tabataScreen input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+#tabataScreen button {
+    min-height: 44px;
+    padding: 10px 14px;
+    margin-top: 10px;
+    margin-right: 6px;
+    cursor: pointer;
+}
+
+#tabataScreen #tabataCountdown {
+    text-align: center;
+    font-size: clamp(48px, 15vw, 90px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 18px 0;
+}
+
+#tabataScreen #tabataTimerDisplay {
+    text-align: center;
+    font-size: clamp(56px, 18vw, 110px);
+    font-weight: 800;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    margin: 20px 0;
+}
+
+#tabataScreen #tabataPhase {
+    text-align: center;
+    font-size: clamp(24px, 7vw, 36px);
+    font-weight: 800;
+}
+
+#tabataScreen #tabataCurrentExercise,
+#tabataScreen #tabataProgress {
+    text-align: center;
+}
+
+#tabataScreen #tabataActivePanel {
+    text-align: center;
+}
+
+#tabataScreen #tabataActivePanel button {
+    min-width: 100px;
+}
+
+#tabataScreen #tabataProtocolsList > *,
+#tabataScreen #tabataExerciseList > *,
+#tabataScreen #tabataHistoryList > * {
+    margin-top: 10px;
+}
+
+#tabataScreen #tabataSetupPanel > button {
+    margin-top: 12px;
+}
+
+@media (max-width: 480px) {
+    #tabataScreen .panel {
+        padding: 14px;
+    }
+
+    #tabataScreen button {
+        max-width: 100%;
+    }
+
+    #tabataScreen #tabataActivePanel button {
+        min-width: 90px;
+    }
+}
+/* ===== MIGLIORAMENTO GRAFICA MOBILE ===== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 12px;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    max-width: 100%;
+}
+
+button {
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input,
+select,
+textarea {
+    min-height: 44px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+img,
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+        line-height: 1.2;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+    }
+}
