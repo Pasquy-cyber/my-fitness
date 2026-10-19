@@ -1,0 +1,12 @@
+{
+  "id": "./",
+  "name": "My Fitness",
+  "short_name": "My Fitness",
+  "description": "La mia app personale per allenamenti e Tabata",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#111827",
+  "background_color": "#111827"
+}
