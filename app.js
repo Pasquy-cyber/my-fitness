@@ -340,6 +340,62 @@ measurementsHomeButton.addEventListener("click", function () {
    VISUALIZZAZIONE ESERCIZIO
 ========================= */
 
+function renderExerciseProgression(exercise) {
+    const panel = document.getElementById("exerciseProgression");
+    if (!panel) return;
+
+    const previousWorkout = workoutHistory.find(function (entry) {
+        return entry.workoutKey === selectedWorkout &&
+            Array.isArray(entry.completedSets) &&
+            entry.completedSets.some(function (set) {
+                return set.exerciseName === exercise.name;
+            });
+    });
+
+    if (!previousWorkout) {
+        panel.textContent = "Prima seduta registrata per questo esercizio: completa le serie per iniziare a monitorare i progressi.";
+        return;
+    }
+
+    const previousSets = previousWorkout.completedSets.filter(function (set) {
+        return set.exerciseName === exercise.name;
+    });
+
+    if (previousSets.length === 0) {
+        panel.textContent = "Nessun dato precedente disponibile per questo esercizio.";
+        return;
+    }
+
+    const previousWeight = previousSets[previousSets.length - 1].weight;
+    const repsText = previousSets.map(function (set) {
+        return set.reps;
+    }).join(" / ");
+    const weightText = previousWeight === null || previousWeight === undefined
+        ? "corpo libero"
+        : previousWeight + " kg";
+
+    let recommendation = "Obiettivo: mantieni il carico e prova a migliorare le ripetizioni, senza perdere la tecnica.";
+    const rangeMatch = String(exercise.range || "").match(/(\\d+)\\s*-\\s*(\\d+)/);
+
+    if (rangeMatch && previousWeight !== null && previousWeight !== undefined) {
+        const upperTarget = Number(rangeMatch[2]);
+        const allSetsAtTop = previousSets.length >= TOTAL_SETS &&
+            previousSets.every(function (set) {
+                return Number(set.reps) >= upperTarget;
+            });
+
+        if (allSetsAtTop) {
+            recommendation = "Hai raggiunto il limite alto in tutte le serie: se la tecnica era pulita e lo sforzo controllato, valuta il più piccolo aumento di peso disponibile.";
+        } else {
+            recommendation = "Prossimo obiettivo: mantieni il carico e prova ad avvicinarti a " + upperTarget + " ripetizioni per serie con tecnica corretta.";
+        }
+    } else if (previousWeight === null || previousWeight === undefined) {
+        recommendation = "Corpo libero: prova ad aggiungere una ripetizione per serie mantenendo controllo e tecnica.";
+    }
+
+    panel.textContent = "Ultima seduta: " + weightText + " · ripetizioni per serie: " + repsText + ". " + recommendation;
+}
+
 function showExercise() {
     const exercise = exercises[currentExercise];
 
@@ -352,6 +408,9 @@ function showExercise() {
     exerciseProgress.textContent =
         "Esercizio " + (currentExercise + 1) +
         " di " + exercises.length;
+
+    // Mostra il confronto con l'ultima seduta dello stesso allenamento.
+    renderExerciseProgression(exercise);
 
     setNumber.textContent = currentSet + " / " + TOTAL_SETS;
     repsInput.value = exercise.reps;
