@@ -11,6 +11,37 @@ const STORAGE_KEY = "myFitnessWorkoutData";
 const HISTORY_KEY = "myFitnessWorkoutHistory";
 const MEASUREMENTS_KEY = "myFitnessBodyMeasurements";
 
+function esportaBackupMyFitness() {
+    const backup = {
+        versione: 1,
+        dataBackup: new Date().toISOString(),
+        allenamenti: localStorage.getItem("myFitnessWorkoutData"),
+        storico: localStorage.getItem("myFitnessWorkoutHistory"),
+        misurazioni: localStorage.getItem("myFitnessBodyMeasurements"),
+        storicoTabata: localStorage.getItem("myFitnessTabataHistory")
+    };
+
+    const file = new Blob(
+        [JSON.stringify(backup, null, 2)],
+        { type: "application/json" }
+    );
+
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "MyFitness-backup-" +
+        new Date().toISOString().slice(0, 10) + ".json";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(function () {
+        URL.revokeObjectURL(url);
+    }, 1000);
+}
+
 const initialMeasurements = [
     { id: "initial-2026-09-19", date: "2026-09-19", weight: 77.15, waist: 96 },
     { id: "initial-2026-09-26", date: "2026-09-26", weight: 77.1, waist: 95 },
@@ -327,7 +358,7 @@ bodyMeasurementsButton.addEventListener("click", function () {
 });
 tabataButton.addEventListener("click", function () {
     showScreen(tabataScreen);
-    
+
 });
 tabataReturnButton.addEventListener("click", function () {
     showScreen(homeScreen);
@@ -2426,3 +2457,195 @@ if (tabataClearHistoryButton) {
 }
 
 tabataRenderHistory();
+const exportBackupButton = document.getElementById("exportBackupButton");
+
+if (exportBackupButton) {
+    exportBackupButton.addEventListener("click", function () {
+        esportaBackupMyFitness();
+    });
+}
+
+const importBackupButton = document.getElementById("importBackupButton");
+const importBackupFile = document.getElementById("importBackupFile");
+
+if (importBackupButton && importBackupFile) {
+    importBackupButton.addEventListener("click", function () {
+        importBackupFile.click();
+    });
+
+    importBackupFile.addEventListener("change", async function () {
+        const file = importBackupFile.files[0];
+        if (!file) return;
+
+        const keys = {
+            allenamenti: "myFitnessWorkoutData",
+            storico: "myFitnessWorkoutHistory",
+            misurazioni: "myFitnessBodyMeasurements",
+            storicoTabata: "myFitnessTabataHistory"
+        };
+
+        const oldValues = {};
+        let importStarted = false;
+
+        try {
+            // 1. Legge e controlla il file prima di modificare i dati.
+            const backup = JSON.parse(await file.text());
+
+            if (!backup || typeof backup !== "object") {
+                throw new Error("Struttura del backup non valida.");
+            }
+
+
+for (const field of Object.keys(keys)) {
+    if (!Object.prototype.hasOwnProperty.call(backup, field)) {
+        throw new Error("Backup incompleto: " + field);
+    }
+
+    const value = backup[field];
+
+    if (value !== null && typeof value !== "string") {
+        throw new Error("Formato non valido: " + field);
+    }
+
+    if (value !== null) {
+        const parsed = JSON.parse(value);
+
+        if (field === "storico" && !Array.isArray(parsed)) {
+            throw new Error("Lo storico allenamenti deve essere un elenco.");
+        }
+
+        if (field === "storicoTabata" && !Array.isArray(parsed)) {
+            throw new Error("Lo storico Tabata deve essere un elenco.");
+        }
+
+        if (field === "misurazioni" &&
+            (!Array.isArray(parsed) && (
+                parsed === null || typeof parsed !== "object"
+            ))) {
+            throw new Error("Formato misurazioni non valido.");
+        }
+
+        if (field === "allenamenti" &&
+            (parsed === null || typeof parsed !== "object" ||
+             Array.isArray(parsed))) {
+            throw new Error("Formato allenamenti non valido.");
+        }
+    }
+}
+            // Conteggio degli elementi da mostrare nell'anteprima.
+            const allenamentiBackup = backup.storico === null
+                ? []
+                : JSON.parse(backup.storico);
+
+            const tabataBackup = backup.storicoTabata === null
+                ? []
+                : JSON.parse(backup.storicoTabata);
+
+            const misurazioniBackup = backup.misurazioni === null
+                ? []
+                : JSON.parse(backup.misurazioni);
+
+            const numeroAllenamenti = allenamentiBackup.length;
+            const numeroTabata = tabataBackup.length;
+            const numeroMisurazioni = Array.isArray(misurazioniBackup)
+                ? misurazioniBackup.length
+                : Object.keys(misurazioniBackup).length;
+                            const anteprimaBackup =
+                "ANTEPRIMA DEL BACKUP\n\n" +
+                "Allenamenti registrati: " + numeroAllenamenti + "\n" +
+                "Sessioni Tabata: " + numeroTabata + "\n" +
+                "Misurazioni corporee: " + numeroMisurazioni + "\n\n" +
+                "Vuoi proseguire con il controllo e l'importazione?";
+
+            if (!confirm(anteprimaBackup)) {
+                return;
+            }
+            // 2. Richiede un backup preventivo verificato dall'utente.
+            if (!confirm(
+                "Prima di procedere, esporta il backup attuale con " +
+                "ESPORTA BACKUP e verifica che il file sia stato scaricato. " +
+                "Hai già completato questo passaggio?"
+            )) {
+                return;
+            }
+
+            // 3. Salva in memoria i dati attuali per poterli ripristinare.
+            for (const key of Object.values(keys)) {
+                oldValues[key] = localStorage.getItem(key);
+            }
+
+            if (!confirm(
+                "L'importazione sostituirà i dati attuali con quelli " +
+                "contenuti nel file selezionato. Vuoi continuare?"
+            )) {
+                return;
+            }
+
+            // 4. Importa i dati. Se una scrittura fallisce,
+            // tenta di ripristinare tutti i valori precedenti.
+            importStarted = true;
+
+            for (const [field, key] of Object.entries(keys)) {
+                const value = backup[field];
+
+                if (value === null) {
+                    localStorage.removeItem(key);
+                } else {
+                    localStorage.setItem(key, value);
+                }
+            }
+
+            alert("Importazione completata. My Fitness verrà ricaricato.");
+            location.reload();
+
+        } catch (error) {
+            console.error("Errore durante l'importazione:", error);
+
+            if (importStarted) {
+                try {
+                    // Rimuove prima i valori importati per liberare spazio.
+                    for (const key of Object.values(keys)) {
+                        localStorage.removeItem(key);
+                    }
+
+                    for (const [key, value] of Object.entries(oldValues)) {
+                        if (value !== null) {
+                            localStorage.setItem(key, value);
+                        }
+                    }
+
+                    alert(
+                        "Importazione non riuscita. " +
+                        "I dati precedenti sono stati ripristinati. " +
+                        "La pagina verrà ricaricata."
+                    );
+
+                    location.reload();
+                    return;
+
+                } catch (restoreError) {
+                    console.error(
+                        "Errore nel ripristino dei dati:",
+                        restoreError
+                    );
+
+                    alert(
+                        "ATTENZIONE: il ripristino automatico non è riuscito. " +
+                        "Non chiudere la pagina. Conserva il backup esterno " +
+                        "e chiedi assistenza prima di effettuare altre modifiche."
+                    );
+
+                    return;
+                }
+            }
+
+            alert(
+                "File non valido o importazione non riuscita. " +
+                "I dati attuali non sono stati modificati."
+            );
+
+        } finally {
+            importBackupFile.value = "";
+        }
+    });
+}
